@@ -26,25 +26,28 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 
 Para instalar o  AluraCord, siga estas etapas:
 
-Linux e macOS:
+
 ```
 npm install
 ```
+ou
 
-Windows:
 ```
-<comando_de_instalação>
+yarn add [package]
 ```
+
 
 ## ☕ Usando <nome_do_projeto>
 
-Para usar <nome_do_projeto>, siga estas etapas:
+Para usar AluraCord, siga estas etapas:
 
 ```
-<exemplo_de_uso>
+npm run dev
 ```
-
-Adicione comandos de execução e exemplos que você acha que os usuários acharão úteis. Fornece uma referência de opções para pontos de bônus!
+ou
+```
+yarn dev
+```
 
 
 ## 🤝 Colaboradores
