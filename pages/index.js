@@ -1,6 +1,7 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import appConfig from '../config.json';
 import React, { useState } from 'react';
+import Head from "next/head"
 
 function GlobalStyle() {
     return (
@@ -35,8 +36,6 @@ function GlobalStyle() {
 function ColorButton(props) {
     const color = props.color
     const handerClick = props.event
-
-
 
     return (
         <>
@@ -95,7 +94,12 @@ export default function PaginaInicial() {
     }
 
     return (
+        
         <>
+            <Head>
+                <title>Aluracord</title>
+            </Head>
+
             <GlobalStyle />
             <Box
                 styleSheet={{
