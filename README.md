@@ -37,7 +37,7 @@ yarn add [package]
 ```
 
 
-## ☕ Usando <nome_do_projeto>
+## ☕ Usando AluraCord
 
 Para usar AluraCord, siga estas etapas:
 
