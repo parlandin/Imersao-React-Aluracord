@@ -1,30 +1,36 @@
-import { Box, Button, Text, TextField, Image } from '@skynexui/components';
-import appConfig from '../config.json';
-import React, { useState } from 'react';
+import { Box, Button, Text, TextField, Image } from '@skynexui/components'
+import appConfig from '../config.json'
+import React, { useState } from 'react'
 import Head from "next/head"
-import ThemeChangeButton from '../src/components/ThemeChangeButton';
-import GlobalStyle from '../src/components/GlobalStyle';
-import Titulo from '../src/components/Titulo';
+import ThemeChangeButton from '../src/components/ThemeChangeButton'
+import Titulo from '../src/components/Titulo'
+import { useRouter } from "next/router"
+import favicon  from  "../src/images/favicon.ico"
 
 
 
 
-export default function PaginaInicial() {
-    const username = 'Gu-Parlandim';
-    let [defaultTheme, setDefaultTheme] = useState(appConfig.defaultTheme)
+export default function PaginaInicial() {   
+    const roteamento = useRouter()
+
+    const [username, setUserName] = useState("Gu-Parlandim")
+    const [defaultTheme, setDefaultTheme] = useState(appConfig.defaultTheme)
     
     function changerTheme(theme) {
-        setDefaultTheme(defaultTheme = theme)
+        setDefaultTheme(theme)
     }
 
     return (
         
         <>
             <Head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link rel="shortcut icon" href={favicon.src} type="image/x-icon" />
                 <title>Aluracord</title>
             </Head>
 
-            <GlobalStyle />
+            
             <Box
                 styleSheet={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -51,6 +57,12 @@ export default function PaginaInicial() {
                 >
                     {/* Formulário */}
                     <Box
+                        onSubmit = {event =>{
+                            event.preventDefault()
+                            roteamento.push("/chat")
+                        } 
+                    }
+                            
                         as="form"
                         styleSheet={{
                             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
@@ -63,7 +75,25 @@ export default function PaginaInicial() {
                         </Text>
 
                         <TextField
+                            value={username}
+                            
+                            onChange={event => {
+                                const newName = event.target.value
+                                let tamanho = newName.length
+                                if (tamanho > 2 ){
+                                    setUserName(newName) 
+                                }else {
+                                    setUserName()
+                                    }
+                                
+                                }
+                            }
+                           
+                                
+
+                       
                             fullWidth
+
                             textFieldColors={{
                                 neutral: {
                                     textColor: defaultTheme.colors.neutrals[200],

@@ -1,5 +1,3 @@
-// Componente React 
-
 function Title(props) {
     const Tag = props.tag
     return (
@@ -22,7 +20,7 @@ function HomePage() {
     //jsx
     return (
         <div>
-            <Title tag="h1">Primeira pagina React!</Title>
+            <Title tag="h1">chat</Title>
             <a href="./about">About page</a>
         </div>
     )
@@ -31,15 +29,3 @@ function HomePage() {
 
   
 export default HomePage
-
-
-
-
-
-
-
-
-
-
-
-
