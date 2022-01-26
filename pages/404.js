@@ -3,7 +3,6 @@ import Head from "next/head"
 import frame  from  "../src/images/Frame-2.jpg"
 import frameSmall from  "../src/images/Frame-Small.jpg"
 import frame2Mobile  from  "../src/images/Android-Small.jpg"
-import favicon  from  "../src/images/favicon.ico"
 import { useRouter } from "next/router"
 
 
@@ -17,9 +16,6 @@ function Page404() {
     return (
     <>
         <Head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="shortcut icon" href={favicon.src} type="image/x-icon" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Patua+One&display=swap" rel="stylesheet" />
