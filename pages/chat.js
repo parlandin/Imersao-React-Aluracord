@@ -12,11 +12,11 @@ import { ThemeContext } from '../contexts/ThemeContext'
 export default function ChatPage() {
     // Sua lógica vai aqui
  
-    let defaultTheme = useContext(ThemeContext).defaultTheme
-
+    let Theme = appConfig.defaultTheme
+    const defaultTheme = useContext(ThemeContext).defaultTheme
+    const setDefaultTheme = useContext(ThemeContext).setDefaultTheme
 
     const router = useRouter()
-
 
 
     const [userMensangem, setUserMensagem] = useState([{
@@ -55,10 +55,10 @@ export default function ChatPage() {
             <Box
                 styleSheet={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    backgroundColor: defaultTheme.colors.primary[500],
+                    backgroundColor: "transparent"/* defaultTheme.colors.primary[500] */,
                     backgroundImage: defaultTheme.backgroundImage,
                     backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
-                    color: appConfig.defaultTheme.colors.neutrals['000']
+                    color: defaultTheme.colors.neutrals['000']
                 }}
             >
                 <Box
@@ -68,7 +68,7 @@ export default function ChatPage() {
                         flex: 1,
                         boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
                         borderRadius: '5px',
-                        backgroundColor: appConfig.defaultTheme.colors.neutrals[700],
+                        backgroundColor: defaultTheme.colors.neutrals[700],
                         height: '100%',
                         maxWidth: '95%',
                         maxHeight: '95vh',
@@ -82,14 +82,14 @@ export default function ChatPage() {
                             display: 'flex',
                             flex: 1,
                             height: '80%',
-                            backgroundColor: appConfig.defaultTheme.colors.neutrals[600],
+                            backgroundColor: defaultTheme.colors.neutrals[600],
                             flexDirection: 'column',
                             borderRadius: '5px',
                             padding: '16px',
                         }}
                     >
 
-                        {<MessageList mensagens={userMensangem} />}
+                        {<MessageList theme={defaultTheme} mensagens={userMensangem} />}
 
                         <Box
                             as="form"
@@ -107,9 +107,9 @@ export default function ChatPage() {
                                     resize: 'none',
                                     borderRadius: '5px',
                                     padding: '6px 8px',
-                                    backgroundColor: appConfig.defaultTheme.colors.neutrals[800],
+                                    backgroundColor: defaultTheme.colors.neutrals[800],
                                     marginRight: '12px',
-                                    color: appConfig.defaultTheme.colors.neutrals[200],
+                                    color: defaultTheme.colors.neutrals[200],
                                 }}
                                 value={mensage}
                                 onChange={(event) => {
@@ -158,7 +158,7 @@ function Header({router}) {
 }
 
 function MessageList(props) {
-
+    const defaultTheme = props.theme
 
     return (
         <Box 
@@ -169,8 +169,9 @@ function MessageList(props) {
                 display: 'flex',
                 flexDirection: 'column-reverse',
                 flex: 1,
-                color: appConfig.defaultTheme.colors.neutrals["000"],
+                color: defaultTheme.colors.neutrals["000"],
                 marginBottom: '16px',
+                backgroundColor: defaultTheme.colors.neutrals[700],
             }}
         >
 
@@ -184,7 +185,7 @@ function MessageList(props) {
                             padding: '6px',
                             marginBottom: '12px',
                             hover: {
-                                backgroundColor: appConfig.defaultTheme.colors.neutrals[700],
+                                backgroundColor: defaultTheme.colors.neutrals[700],
                             }
                         }}
                     >
@@ -210,7 +211,7 @@ function MessageList(props) {
                                 styleSheet={{
                                     fontSize: '10px',
                                     marginLeft: '8px',
-                                    color: appConfig.defaultTheme.colors.neutrals[300],
+                                    color: defaultTheme.colors.neutrals[300],
                                 }}
                                 tag="span"
                             >
