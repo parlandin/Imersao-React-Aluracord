@@ -2,9 +2,10 @@ import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React, { useContext, useState, useEffect } from 'react';
 import appConfig from '../config.json';
 import Head from "next/head"
-import { UserContext } from '../contexts/UserContext';
+import { UserContext } from '../contexts/UserContext'
 import { useRouter } from 'next/router';
 import { ThemeContext } from '../contexts/ThemeContext'
+import { createClient } from '@supabase/supabase-js'
 
 
 
@@ -12,9 +13,28 @@ import { ThemeContext } from '../contexts/ThemeContext'
 export default function ChatPage() {
     // Sua lógica vai aqui
  
+    //Banco de Dados
+    const baseUrl = process.env.NEXT_PUBLIC_SUPERBASE_URL
+    const anonKey =  process.env.NEXT_PUBLIC_SUPERBASE_ANON_KEY
+    const superbase = createClient(baseUrl, anonKey )
+
+    superbase
+    .from("mensagens-date")
+    .select("*")
+    .then( (date) => console.log(date))
+ 
+
+
+
+
+
+
+
+
+
     let Theme = appConfig.defaultTheme
-    const defaultTheme = useContext(ThemeContext).defaultTheme
-    const setDefaultTheme = useContext(ThemeContext).setDefaultTheme
+    const { defaultTheme } = useContext(ThemeContext)
+    /* const setDefaultTheme = useContext(ThemeContext).setDefaultTheme */
 
     const router = useRouter()
 
@@ -28,7 +48,7 @@ export default function ChatPage() {
     ])
 
 
-    const username = useContext(UserContext).userName
+    const { userName } = useContext(UserContext)
 
     const [mensage, setNewMensage] = useState() 
 
@@ -37,8 +57,8 @@ export default function ChatPage() {
         setUserMensagem([
             {
                 id: `${userMensangem.length}` ,
-                userName: `${username}`,
-                userPhoto: `https://github.com/${username}.png`,
+                userName: `${userName}`,
+                userPhoto: `https://github.com/${userName}.png`,
                 message: date
             }, ...userMensangem,]
         )
@@ -70,7 +90,7 @@ export default function ChatPage() {
                         borderRadius: '5px',
                         backgroundColor: defaultTheme.colors.neutrals[700],
                         height: '100%',
-                        maxWidth: '95%',
+                        maxWidth: '90%',
                         maxHeight: '95vh',
                         padding: '32px',
                     }}

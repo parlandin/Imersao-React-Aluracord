@@ -16,9 +16,9 @@ export default function PaginaInicial() {
     /* const Theme = useContext(ThemeContext).temaTest
     const setTheme =  useContext(ThemeContext).setTemaTest */
 
-    const username = useContext(UserContext).userName
-    const setUserName = useContext(UserContext).setUserName
-
+    /* const username = useContext(UserContext).userName
+    const setUserName = useContext(UserContext).setUserName */
+    const { userName, setUserName } = useContext(UserContext)
 
 
     const router = useRouter()
@@ -90,7 +90,7 @@ export default function PaginaInicial() {
                         </Text>
 
                         <TextField
-                            value={username}
+                            value={userName}
 
                             onChange={event => {
                                 const newName = event.target.value
@@ -179,7 +179,7 @@ export default function PaginaInicial() {
                                 borderRadius: '50%',
                                 marginBottom: '16px',
                             }}
-                            src={ `https://github.com/${username}.png`}
+                            src={ `https://github.com/${userName}.png`}
                                     
                             
                         />
@@ -192,7 +192,7 @@ export default function PaginaInicial() {
                                 borderRadius: '1000px'
                             }}
                         >
-                            {username}
+                            {userName}
                         </Text>
                     </Box>
                     {/* Photo Area */}
