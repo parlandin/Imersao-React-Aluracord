@@ -9,60 +9,86 @@ import { createClient } from '@supabase/supabase-js'
 
 
 
+export async function getServerSideProps(context) {
+    return {
+      props: {
+            baseUrl: process.env.SUPERBASE_URL,
+            anonKey: process.env.SUPERBASE_ANON_KEY
 
-export default function ChatPage() {
+        }, // will be passed to the page component as props
+    }
+  }
+
+
+
+export default function ChatPage({baseUrl, anonKey}) {
     // Sua lógica vai aqui
- 
-    //Banco de Dados
-    const baseUrl = process.env.NEXT_PUBLIC_SUPERBASE_URL
-    const anonKey =  process.env.NEXT_PUBLIC_SUPERBASE_ANON_KEY
-    const superbase = createClient(baseUrl, anonKey )
-
-    superbase
-    .from("mensagens-date")
-    .select("*")
-    .then( (date) => console.log(date))
- 
-
-
-
-
-
-
-
-
+    const { userName } = useContext(UserContext)
+    const router = useRouter()
 
     let Theme = appConfig.defaultTheme
     const { defaultTheme } = useContext(ThemeContext)
-    /* const setDefaultTheme = useContext(ThemeContext).setDefaultTheme */
-
-    const router = useRouter()
 
 
-    const [userMensangem, setUserMensagem] = useState([{
-        userName: `Gustavo Parlandim`,
-        id: 0,
-        userPhoto: "https://avatars.githubusercontent.com/u/56051040?v=4",
-        message: "Olá, seja Bem vindo ao chat!"
-        }
-    ])
+    //Banco de Dados
+    
+    const superbase = createClient(baseUrl, anonKey )
+
+    
+
+     /* async function receberDados(){
+        superbase
+        .from("mensagens-date")
+        .select("*")
+        .then( ( { data } ) => data)
+    } */
 
 
-    const { userName } = useContext(UserContext)
+    /* const  [dados , setNewDados ] = useState([]) */
+        
+   /*  async function receberDados(){
+        superbase
+        .from("mensagens-date")
+        .select("*")
+        .then( ( { data } ) => setNewDados(data))
+    }
+ */
 
+    const [userMensangem, setUserMensagem] = useState([])
     const [mensage, setNewMensage] = useState() 
+
+    useEffect(() => {
+        superbase
+        .from("mensagens-date")
+        .select("*")
+        .order("id", { ascending:false})
+        .then( ( { data } ) =>  setUserMensagem(data))
+        console.log("mudou")
+    }, [])
+    
+    
 
 
     function handleNewMessage(date){
-        setUserMensagem([
+        const newMensage = {
+            userName: `${userName}`,
+            texto: date,
+        }
+        superbase
+            .from("mensagens-date")
+            .insert([newMensage])
+            .then((date) => {
+                setUserMensagem([ newMensage, ...userMensangem,] 
+                )
+            })
+
+       /*  setUserMensagem([
             {
-                id: `${userMensangem.length}` ,
-                userName: `${userName}`,
-                userPhoto: `https://github.com/${userName}.png`,
-                message: date
-            }, ...userMensangem,]
-        )
-        setNewMensage("")
+                
+            }, ...userMensangem,] 
+        )*/
+
+        setNewMensage("") 
     }
 
     // ./Sua lógica vai aqui
@@ -109,7 +135,7 @@ export default function ChatPage() {
                         }}
                     >
 
-                        {<MessageList theme={defaultTheme} mensagens={userMensangem} />}
+                        {<MessageList defaultTheme={defaultTheme} mensagens={userMensangem} userName={userName} />}
 
                         <Box
                             as="form"
@@ -177,8 +203,8 @@ function Header({router}) {
     )
 }
 
-function MessageList(props) {
-    const defaultTheme = props.theme
+function MessageList({ defaultTheme, mensagens, userName }) {
+    /* const defaultTheme = props.theme */
 
     return (
         <Box 
@@ -195,7 +221,8 @@ function MessageList(props) {
             }}
         >
 
-            {props.mensagens.map((date) => {
+            {/* props. */mensagens.map((date) => {
+                console.log(date)
                 return (
                     <Text
                         key={date.id}
@@ -222,7 +249,7 @@ function MessageList(props) {
                                     display: 'inline-block',
                                     marginRight: '8px',
                                 }}
-                                src={date.userPhoto}
+                                src={`https://github.com/${userName}.png`}
                             />
                             <Text tag="strong">
                                 {date.userName}
@@ -236,9 +263,10 @@ function MessageList(props) {
                                 tag="span"
                             >
                                 {(new Date().toLocaleDateString())}
+                                
                             </Text>
                         </Box>
-                        {date.message}
+                        {date.texto}
                     </Text>
 
                 )
