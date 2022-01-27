@@ -57,6 +57,21 @@ export default function ChatPage({baseUrl, anonKey}) {
     const [userMensangem, setUserMensagem] = useState([])
     const [mensage, setNewMensage] = useState() 
 
+    const [naosei, setNaoSei] = useState(false)
+
+    const mySubscription = superbase
+    .from("mensagens-date")
+    .on('INSERT', payload => {
+       if(naosei == false){
+            setNaoSei(true)
+       }else{
+        setNaoSei(false)
+       }
+    })
+    .subscribe() 
+
+    
+
     useEffect(() => {
         superbase
         .from("mensagens-date")
@@ -64,7 +79,7 @@ export default function ChatPage({baseUrl, anonKey}) {
         .order("id", { ascending:false})
         .then( ( { data } ) =>  setUserMensagem(data))
         console.log("mudou")
-    }, [])
+    }, [naosei])
     
     
 
@@ -222,7 +237,7 @@ function MessageList({ defaultTheme, mensagens, userName }) {
         >
 
             {/* props. */mensagens.map((date) => {
-                console.log(date)
+                
                 return (
                     <Text
                         key={date.id}
