@@ -143,8 +143,8 @@ export default function ChatPage({baseUrl, anonKey}) {
                         }}
                     >
 
-                        {<MessageList defaultTheme={defaultTheme} mensagens={userMensangem} userName={userName} setMensagens={setUserMensagem} />}
-
+                        {<MessageList defaultTheme={defaultTheme} mensagens={userMensangem} userName={userName} setMensagens={setUserMensagem} superbase={superbase} />}
+                        
                         <Box
                             as="form"
                             styleSheet={{
@@ -215,7 +215,7 @@ function Header({router}) {
     )
 }
 
-function MessageList({ defaultTheme, mensagens , setMensagens}) {
+function MessageList({ defaultTheme, mensagens , setMensagens , superbase , userName}) {
     /* const defaultTheme = props.theme */
     function Remover(mensagem) {
         const novaListaDeMensagens = mensagens.filter((mensagemRemover) =>{
@@ -241,11 +241,12 @@ function MessageList({ defaultTheme, mensagens , setMensagens}) {
             }}
            
         >
-
+            
             {/* props. */mensagens.map((date) => {
-                
+               
                 return (
                     <>
+                    
                     <Text
                         key={date.id}
                         tag="li"
@@ -259,11 +260,13 @@ function MessageList({ defaultTheme, mensagens , setMensagens}) {
                         }}
                        
                     >
+
                         <Box
                             styleSheet={{
                                 marginBottom: '8px',
                             }}
                         >
+
                             <Image
                                 styleSheet={{
                                     width: '20px',
@@ -281,13 +284,30 @@ function MessageList({ defaultTheme, mensagens , setMensagens}) {
                                 styleSheet={{
                                     fontSize: '10px',
                                     marginLeft: '8px',
+                                    marginRight: "20px",
                                     color: defaultTheme.colors.neutrals[300],
                                 }}
                                 tag="span"
                             >
                                 {(new Date().toLocaleDateString())}
-                                
                             </Text>
+
+                            <CustomButton  onClick={() => {
+                                        if(userName == date.userName){
+                                            superbase
+                                            .from("mensagens-date")
+                                            .delete([date])
+                                            .match({ id: `${date.id}` })
+                                            .then((data) => console.log(data))
+                                            Remover(mensagens)
+                                        } else{
+                                            alert("Você só pode apagar suas proprias mensagens!!")
+                                        }
+                                    }
+                                }>
+                                {TrashImage.src}
+                            </CustomButton>
+
                         </Box>
                         {date.texto}
                     
