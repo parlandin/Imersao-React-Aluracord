@@ -30,12 +30,31 @@ function listenerChange(addNewMensage, superbase){
         superbase
         .from("mensagens-date")
         .on('INSERT', async (date) => {
+            
             addNewMensage(date.new) 
         })
         .subscribe()
 
     )
     }
+
+/* function deleteMensagens(removeMensage, superbase) {
+    return superbase
+    .from("mensagens-date")
+    .on('DELETE', async (respose) => {
+        console.log("respose" , respose)
+        removeMensage(respose)
+        superbase
+            .from("mensagens-date")
+            .select("*")
+            .order("id", { ascending:false})
+            .then( ( { data } ) =>  setUserMensagem(() => {
+                console.log(data)
+                return [...data,]
+            })) 
+    })
+    .subscribe()
+} */
     
 
 
@@ -77,15 +96,22 @@ export default function ChatPage({baseUrl, anonKey}) {
  */
 
     const [userMensangem, setUserMensagem] = useState([])
-    const [mensage, setNewMensage] = useState() 
-
-
-  
+    const [mensage, setNewMensage] = useState()
 
     
-        
+    superbase
+        .from("mensagens-date")
+        .on('DELETE', async handleRecordInserted => {
+            console.log("apagou")
+            superbase
+                .from("mensagens-date")
+                .select("*")
+                .order("id", { ascending:false})
+                .then( ( { data } ) =>  setUserMensagem(data)) 
+        })
+        .subscribe()  
 
-    
+
 
     useEffect(() => {
         superbase
@@ -97,26 +123,18 @@ export default function ChatPage({baseUrl, anonKey}) {
                 setUserMensagem(data)
             })
 
+
+
         listenerChange((date) => {
-           
             setUserMensagem((valorAtual) => {
                 return [
-                date, ...valorAtual,
+                date, 
+                ...valorAtual,
                 ]}
             )
-        }
-        , superbase)
-        /* superbase
-            .from("mensagens-date")
-            .on('DELETE', async handleRecordInserted => {
-                console.log("apagou")
-                superbase
-                    .from("mensagens-date")
-                    .select("*")
-                    .order("id", { ascending:false})
-                    .then( ( { data } ) =>  setUserMensagem(data)) 
-            })
-        .subscribe() */
+        }, superbase)
+
+
     }, [])
     
     
