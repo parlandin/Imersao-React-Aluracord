@@ -63,7 +63,9 @@ export default function ChatPage({baseUrl, anonKey}) {
 
 
     
-
+    const mySubscription = superbase
+        .from("mensagens-date")
+        
     
 
     useEffect(() => {
@@ -85,10 +87,24 @@ export default function ChatPage({baseUrl, anonKey}) {
         superbase
             .from("mensagens-date")
             .insert([newMensage])
-            .then((date) => {
-                setUserMensagem([ newMensage, ...userMensangem,] 
-                )
+            .then(() =>  { setUserMensagem([ newMensage, ...userMensangem,]) })
+            
+
+            superbase
+            .from("mensagens-date")
+            .on('INSERT', async handleRecordInserted => {
+                console.log("fez um request")
+                superbase
+                    .from("mensagens-date")
+                    .select("*")
+                    .order("id", { ascending:false})
+                    .then( ( { data } ) =>  setUserMensagem(data)) 
+
             })
+            .on('DELETE', async handleRecordDeleted => {
+                console.log("deletou")
+            })
+            .subscribe()
 
        /*  setUserMensagem([
             {
