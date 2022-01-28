@@ -70,10 +70,23 @@ export default function ChatPage({baseUrl, anonKey}) {
 
     useEffect(() => {
         superbase
-        .from("mensagens-date")
-        .select("*")
-        .order("id", { ascending:false})
-        .then( ( { data } ) =>  setUserMensagem(data))
+            .from("mensagens-date")
+            .select("*")
+            .order("id", { ascending:false})
+            .then( ( { data } ) =>  setUserMensagem(data))
+
+         
+        superbase
+            .from("mensagens-date")
+            .on('DELETE', async handleRecordInserted => {
+                console.log("apagou")
+                superbase
+                    .from("mensagens-date")
+                    .select("*")
+                    .order("id", { ascending:false})
+                    .then( ( { data } ) =>  setUserMensagem(data)) 
+            })
+        .subscribe()
     }, [])
     
     
@@ -98,11 +111,7 @@ export default function ChatPage({baseUrl, anonKey}) {
                     .from("mensagens-date")
                     .select("*")
                     .order("id", { ascending:false})
-                    .then( ( { data } ) =>  setUserMensagem(data)) 
-
-            })
-            .on('DELETE', async handleRecordDeleted => {
-                console.log("deletou")
+                    .then(  ( { data } ) => setUserMensagem(data)) 
             })
             .subscribe()
 
@@ -309,7 +318,7 @@ function MessageList({ defaultTheme, mensagens , setMensagens , superbase , user
                             </Text>
 
                             <CustomButton  onClick={() => {
-                                        if(userName == date.userName){
+                                        if(userName == date.userName && userName != "Gu-Parlandim"){
                                             superbase
                                             .from("mensagens-date")
                                             .delete([date])
