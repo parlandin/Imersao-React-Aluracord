@@ -9,6 +9,7 @@ import { createClient } from '@supabase/supabase-js'
 import CustomButton from '../src/components/CustomButton';
 import SendImage from "../src/images/send.svg"
 import TrashImage from "../src/images/trash2.svg"
+import { ButtonSendSticker } from "../src/components/ButtonSendSticker"
 
 
 
@@ -24,8 +25,24 @@ export async function getServerSideProps(context) {
 
 
 
-export default function ChatPage({baseUrl, anonKey}) {
+function listenerChange(addNewMensage, superbase){
+    return (
+        superbase
+        .from("mensagens-date")
+        .on('INSERT', async (date) => {
+            addNewMensage(date.new) 
+        })
+        .subscribe()
+
+    )
+    }
     
+
+
+
+export default function ChatPage({baseUrl, anonKey}) {
+    const superbase = createClient(baseUrl, anonKey )
+
     // Sua lógica vai aqui
     const { userName } = useContext(UserContext)
     const router = useRouter()
@@ -36,7 +53,7 @@ export default function ChatPage({baseUrl, anonKey}) {
 
     //Banco de Dados
     
-    const superbase = createClient(baseUrl, anonKey )
+    
 
     
 
@@ -62,10 +79,11 @@ export default function ChatPage({baseUrl, anonKey}) {
     const [mensage, setNewMensage] = useState() 
 
 
+  
+
     
-    const mySubscription = superbase
-        .from("mensagens-date")
         
+
     
 
     useEffect(() => {
@@ -73,10 +91,22 @@ export default function ChatPage({baseUrl, anonKey}) {
             .from("mensagens-date")
             .select("*")
             .order("id", { ascending:false})
-            .then( ( { data } ) =>  setUserMensagem(data))
+            .then( ( { data } ) => {
+                console.log(data)
+                setUserMensagem(data)
+            })
 
-         
-        superbase
+        listenerChange((date) => {
+            console.log(userMensangem)
+            setUserMensagem(() => {
+                
+                return [
+                date, ...userMensangem,
+                ]}
+            )
+        }
+        , superbase)
+        /* superbase
             .from("mensagens-date")
             .on('DELETE', async handleRecordInserted => {
                 console.log("apagou")
@@ -86,7 +116,7 @@ export default function ChatPage({baseUrl, anonKey}) {
                     .order("id", { ascending:false})
                     .then( ( { data } ) =>  setUserMensagem(data)) 
             })
-        .subscribe()
+        .subscribe() */
     }, [])
     
     
@@ -100,10 +130,10 @@ export default function ChatPage({baseUrl, anonKey}) {
         superbase
             .from("mensagens-date")
             .insert([newMensage])
-            .then(() =>  { setUserMensagem([ newMensage, ...userMensangem,]) })
+            .then(() =>  {})
             
 
-            superbase
+            /* superbase
             .from("mensagens-date")
             .on('INSERT', async handleRecordInserted => {
                 console.log("fez um request")
@@ -113,7 +143,7 @@ export default function ChatPage({baseUrl, anonKey}) {
                     .order("id", { ascending:false})
                     .then(  ( { data } ) => setUserMensagem(data)) 
             })
-            .subscribe()
+            .subscribe() */
 
        /*  setUserMensagem([
             {
@@ -208,6 +238,12 @@ export default function ChatPage({baseUrl, anonKey}) {
                             }}>
                                 {SendImage.src}
                             </CustomButton>
+                            <ButtonSendSticker onSend={(sticker)=> {
+                                
+                                handleNewMessage(`:sticker:${sticker}`)
+                            }}>
+
+                            </ButtonSendSticker>
                         </Box>
                     </Box>
                 </Box>
@@ -334,7 +370,22 @@ function MessageList({ defaultTheme, mensagens , setMensagens , superbase , user
                             </CustomButton>
 
                         </Box>
-                        {date.texto}
+                        
+                        {date.texto.startsWith(":sticker:")
+                        ? (
+                            <Image 
+                            styleSheet={{
+                                maxWidth: "170px",
+                            }}
+                            src={date.texto.replace(":sticker:", "")} alt="sticker img" />
+                        )
+                        : 
+                        (
+                           date.texto
+                        )
+                    }
+                       
+                        
                     
                     </Text>
                    {/*  <CustomButton  onClick={() => {
