@@ -41,6 +41,7 @@ function listenerChange(addNewMensage, superbase){
 
 
 export default function ChatPage({baseUrl, anonKey}) {
+
     const superbase = createClient(baseUrl, anonKey )
 
     // Sua lógica vai aqui
@@ -92,16 +93,15 @@ export default function ChatPage({baseUrl, anonKey}) {
             .select("*")
             .order("id", { ascending:false})
             .then( ( { data } ) => {
-                console.log(data)
+                
                 setUserMensagem(data)
             })
 
         listenerChange((date) => {
-            console.log(userMensangem)
-            setUserMensagem(() => {
-                
+           
+            setUserMensagem((valorAtual) => {
                 return [
-                date, ...userMensangem,
+                date, ...valorAtual,
                 ]}
             )
         }
