@@ -6,6 +6,9 @@ import { UserContext } from '../contexts/UserContext'
 import { useRouter } from 'next/router';
 import { ThemeContext } from '../contexts/ThemeContext'
 import { createClient } from '@supabase/supabase-js'
+import CustomButton from '../src/components/CustomButton';
+import SendImage from "../src/images/send.svg"
+import TrashImage from "../src/images/trash2.svg"
 
 
 
@@ -22,6 +25,7 @@ export async function getServerSideProps(context) {
 
 
 export default function ChatPage({baseUrl, anonKey}) {
+    
     // Sua lógica vai aqui
     const { userName } = useContext(UserContext)
     const router = useRouter()
@@ -68,7 +72,6 @@ export default function ChatPage({baseUrl, anonKey}) {
         .select("*")
         .order("id", { ascending:false})
         .then( ( { data } ) =>  setUserMensagem(data))
-        console.log("mudou")
     }, [])
     
     
@@ -140,7 +143,7 @@ export default function ChatPage({baseUrl, anonKey}) {
                         }}
                     >
 
-                        {<MessageList defaultTheme={defaultTheme} mensagens={userMensangem} userName={userName} />}
+                        {<MessageList defaultTheme={defaultTheme} mensagens={userMensangem} userName={userName} setMensagens={setUserMensagem} />}
 
                         <Box
                             as="form"
@@ -173,9 +176,13 @@ export default function ChatPage({baseUrl, anonKey}) {
                                         handleNewMessage(mensage)
                                     }
                                 }}
-
-
                             />
+                            <CustomButton onClick={() => {
+                                console.log("travou aqui")
+                                handleNewMessage(mensage)
+                            }}>
+                                {SendImage.src}
+                            </CustomButton>
                         </Box>
                     </Box>
                 </Box>
@@ -208,8 +215,16 @@ function Header({router}) {
     )
 }
 
-function MessageList({ defaultTheme, mensagens, userName }) {
+function MessageList({ defaultTheme, mensagens , setMensagens}) {
     /* const defaultTheme = props.theme */
+    function Remover(mensagem) {
+        const novaListaDeMensagens = mensagens.filter((mensagemRemover) =>{
+            return  mensagens.id !== mensagemRemover.id
+        })
+        setMensagens(novaListaDeMensagens)
+    }
+
+    
 
     return (
         <Box 
@@ -224,11 +239,13 @@ function MessageList({ defaultTheme, mensagens, userName }) {
                 marginBottom: '16px',
                 backgroundColor: defaultTheme.colors.neutrals[700],
             }}
+           
         >
 
             {/* props. */mensagens.map((date) => {
                 
                 return (
+                    <>
                     <Text
                         key={date.id}
                         tag="li"
@@ -240,6 +257,7 @@ function MessageList({ defaultTheme, mensagens, userName }) {
                                 backgroundColor: defaultTheme.colors.neutrals[700],
                             }
                         }}
+                       
                     >
                         <Box
                             styleSheet={{
@@ -254,7 +272,7 @@ function MessageList({ defaultTheme, mensagens, userName }) {
                                     display: 'inline-block',
                                     marginRight: '8px',
                                 }}
-                                src={`https://github.com/${userName}.png`}
+                                src={`https://github.com/${date.userName}.png`}
                             />
                             <Text tag="strong">
                                 {date.userName}
@@ -272,11 +290,20 @@ function MessageList({ defaultTheme, mensagens, userName }) {
                             </Text>
                         </Box>
                         {date.texto}
+                    
                     </Text>
-
+                   {/*  <CustomButton  onClick={() => {
+                        Remover(mensagens)
+                    }
+                    }>
+                        {TrashImage.src}
+                    </CustomButton> */}
+                </>
                 )
             })}
+           
         </Box>
-       
+        
     )
+   
 }
