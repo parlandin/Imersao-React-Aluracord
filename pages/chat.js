@@ -1,26 +1,13 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React, { useContext, useState, useEffect } from 'react';
-import appConfig from '../config.json';
 import Head from "next/head"
 import { UserContext } from '../contexts/UserContext'
 import { useRouter } from 'next/router';
 import { ThemeContext } from '../contexts/ThemeContext'
 import { createClient } from '@supabase/supabase-js'
 import CustomButton from '../src/components/CustomButton';
-import SendImage from "../src/images/send.svg"
-import TrashImage from "../src/images/trash2.svg"
 import { ButtonSendSticker } from "../src/components/ButtonSendSticker"
 
-
-
-/* export async function getServerSideProps(context) {
-    return {
-      props: {
-            baseUrl: process.env.SUPERBASE_URL,
-            anonKey: process.env.SUPERBASE_ANON_KEY,
-        }, 
-    }
-  } */
 
 
 
@@ -30,7 +17,7 @@ const superbase = createClient(baseUrl, anonKey )
 
 
 
-function listenerChange(addNewMensage, superbase){
+function listenerChange(addNewMensage){
     return (
         superbase
         .from("mensagens-date")
@@ -41,81 +28,38 @@ function listenerChange(addNewMensage, superbase){
         .subscribe()
 
     )
-    }
+}
 
-/* function deleteMensagens(removeMensage, superbase) {
-    return superbase
-    .from("mensagens-date")
-    .on('DELETE', async (respose) => {
-        console.log("respose" , respose)
-        removeMensage(respose)
+
+function listenerDelete(paramets){
+    return (
         superbase
-            .from("mensagens-date")
-            .select("*")
-            .order("id", { ascending:false})
-            .then( ( { data } ) =>  setUserMensagem(() => {
-                console.log(data)
-                return [...data,]
-            })) 
-    })
-    .subscribe()
-} */
+        .from("mensagens-date")
+        .on("DELETE", async (date) =>{
+            console.log("deletou")
+            paramets(date)
+        })
+        .subscribe()
+    )
+}
+
+
+
+
+export default function ChatPage() {
     
-
-
-
-export default function ChatPage(/* {baseUrl, anonKey} */ ) {
-    
-   /*  const superbase = createClient(baseUrl, anonKey )  */
-
-    // Sua lógica vai aqui
     const { userName } = useContext(UserContext)
     const router = useRouter()
 
-    let Theme = appConfig.defaultTheme
     const { defaultTheme } = useContext(ThemeContext)
 
 
-    //Banco de Dados
-    
-    
-
-    
-
-     /* async function receberDados(){
-        superbase
-        .from("mensagens-date")
-        .select("*")
-        .then( ( { data } ) => data)
-    } */
-
-
-    /* const  [dados , setNewDados ] = useState([]) */
-        
-   /*  async function receberDados(){
-        superbase
-        .from("mensagens-date")
-        .select("*")
-        .then( ( { data } ) => setNewDados(data))
-    }
- */
 
     const [userMensangem, setUserMensagem] = useState([])
     const [mensage, setNewMensage] = useState("")
 
     
-    /* superbase
-        .from("mensagens-date")
-        .on('DELETE', async handleRecordInserted => {
-            console.log("apagou")
-            superbase
-                .from("mensagens-date")
-                .select("*")
-                .order("id", { ascending:false})
-                .then( ( { data } ) =>  setUserMensagem(data)) 
-        })
-        .subscribe()   */
-
+    const [deleting, setDeleting] = useState("")
 
 
     useEffect(() => {
@@ -128,8 +72,6 @@ export default function ChatPage(/* {baseUrl, anonKey} */ ) {
                 setUserMensagem(data)
             })
 
-
-
         listenerChange((date) => {
             setUserMensagem((valorAtual) => {
                 return [
@@ -137,13 +79,12 @@ export default function ChatPage(/* {baseUrl, anonKey} */ ) {
                 ...valorAtual,
                 ]}
             )
-        }, superbase)
+        })
 
 
-    }, [])
+    }, [deleting])
     
     
-
 
     function handleNewMessage(date){
         const newMensage = {
@@ -155,29 +96,9 @@ export default function ChatPage(/* {baseUrl, anonKey} */ ) {
             .insert([newMensage])
             .then(() =>  {})
             
-
-            /* superbase
-            .from("mensagens-date")
-            .on('INSERT', async handleRecordInserted => {
-                console.log("fez um request")
-                superbase
-                    .from("mensagens-date")
-                    .select("*")
-                    .order("id", { ascending:false})
-                    .then(  ( { data } ) => setUserMensagem(data)) 
-            })
-            .subscribe() */
-
-       /*  setUserMensagem([
-            {
-                
-            }, ...userMensangem,] 
-        )*/
-
         setNewMensage("") 
     }
 
-    // ./Sua lógica vai aqui
     return (
         <>
             <Head>
@@ -187,7 +108,7 @@ export default function ChatPage(/* {baseUrl, anonKey} */ ) {
             <Box
                 styleSheet={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    backgroundColor: "transparent"/* defaultTheme.colors.primary[500] */,
+                    backgroundColor: "transparent",
                     backgroundImage: defaultTheme.backgroundImage,
                     backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
                     color: defaultTheme.colors.neutrals['000']
@@ -221,7 +142,7 @@ export default function ChatPage(/* {baseUrl, anonKey} */ ) {
                         }}
                     >
 
-                        {<MessageList defaultTheme={defaultTheme} mensagens={userMensangem} userName={userName} setMensagens={setUserMensagem} superbase={superbase} />}
+                        {<MessageList defaultTheme={defaultTheme} mensagens={userMensangem} userName={userName} setMensagens={setUserMensagem} superbase={superbase} setDeleting={setDeleting}/>}
                         
                         <Box
                             as="form"
@@ -265,7 +186,7 @@ export default function ChatPage(/* {baseUrl, anonKey} */ ) {
                                 mensage.length > 0 ? handleNewMessage(mensage) : alert("sua mensagem não pode ser vazia")
                                 
                             }}>
-                                {SendImage.src}
+                                {"/images/send.svg"}
                             </CustomButton>
                             <ButtonSendSticker onSend={(sticker)=> {
                                 
@@ -305,13 +226,13 @@ function Header({router}) {
     )
 }
 
-function MessageList({ defaultTheme, mensagens , setMensagens , superbase , userName}) {
-    /* const defaultTheme = props.theme */
+function MessageList(props) {
+
     function Remover(mensagem) {
-        const novaListaDeMensagens = mensagens.filter((mensagemRemover) =>{
-            return  mensagens.id !== mensagemRemover.id
+        const novaListaDeMensagens = props.mensagens.filter((mensagemRemover) =>{
+            return  props.mensagens.id !== mensagemRemover.id
         })
-        setMensagens(novaListaDeMensagens)
+        props.setMensagens(novaListaDeMensagens)
     }
 
     
@@ -325,14 +246,14 @@ function MessageList({ defaultTheme, mensagens , setMensagens , superbase , user
                 display: 'flex',
                 flexDirection: 'column-reverse',
                 flex: 1,
-                color: defaultTheme.colors.neutrals["000"],
+                color: props.defaultTheme.colors.neutrals["000"],
                 marginBottom: '16px',
-                backgroundColor: defaultTheme.colors.neutrals[700],
+                backgroundColor: props.defaultTheme.colors.neutrals[700],
             }}
            
         >
             
-            {/* props. */mensagens.map((date) => {
+            {props.mensagens.map((date) => {
                
                 return (
                     <>
@@ -345,7 +266,7 @@ function MessageList({ defaultTheme, mensagens , setMensagens , superbase , user
                             padding: '6px',
                             marginBottom: '12px',
                             hover: {
-                                backgroundColor: defaultTheme.colors.neutrals[700],
+                                backgroundColor: props.defaultTheme.colors.neutrals[700],
                             }
                         }}
                        
@@ -375,7 +296,7 @@ function MessageList({ defaultTheme, mensagens , setMensagens , superbase , user
                                     fontSize: '10px',
                                     marginLeft: '8px',
                                     marginRight: "20px",
-                                    color: defaultTheme.colors.neutrals[300],
+                                    color: props.defaultTheme.colors.neutrals[300],
                                 }}
                                 tag="span"
                             >
@@ -383,19 +304,30 @@ function MessageList({ defaultTheme, mensagens , setMensagens , superbase , user
                             </Text>
 
                             <CustomButton  onClick={() => {
-                                        if(userName == date.userName && userName != "Gu-Parlandim"){
+                                        if(props.userName == date.userName && props.userName != "Gu-Parlandim"){
+                                            Remover(props.mensagens)
+
                                             superbase
                                             .from("mensagens-date")
                                             .delete([date])
                                             .match({ id: `${date.id}` })
-                                            .then((data) => console.log(data))
-                                            Remover(mensagens)
+                                            .then(() => {})
+
+                                            listenerDelete((date) => {
+                                                console.log("deletou:", date)
+                                                props.setDeleting((valor)=> {
+                                                    return !valor
+                                                })
+                                                    
+                                                    
+                                            })  
+
                                         } else{
                                             alert("Você só pode apagar suas proprias mensagens!!")
                                         }
                                     }
                                 }>
-                                {TrashImage.src}
+                                {"/images/trash2.svg"}
                             </CustomButton>
 
                         </Box>
@@ -417,12 +349,6 @@ function MessageList({ defaultTheme, mensagens , setMensagens , superbase , user
                         
                     
                     </Text>
-                   {/*  <CustomButton  onClick={() => {
-                        Remover(mensagens)
-                    }
-                    }>
-                        {TrashImage.src}
-                    </CustomButton> */}
                 </>
                 )
             })}

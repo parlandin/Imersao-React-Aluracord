@@ -1,8 +1,5 @@
 import { Box, Button, Text,  Image } from '@skynexui/components';
 import Head from "next/head"
-import frame  from  "../src/images/Frame-2.jpg"
-import frameSmall from  "../src/images/Frame-Small.jpg"
-import frame2Mobile  from  "../src/images/Android-Small.jpg"
 import { useRouter } from "next/router"
 
 
@@ -28,7 +25,7 @@ function Page404() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 backgroundColor: "transparent",
                 
-                backgroundImage: {lg: `url(${frame.src})`, md: `url(${frameSmall.src})`, sm: `url(${frameSmall.src})` ,xs: `url(${frame2Mobile.src})` },
+                backgroundImage: {lg: `url(/images/Frame-2.jpg)`, md: `url(/images/Frame-Small.jpg)`, sm: `url(/images/Frame-Small.jpg)` ,xs: `url(/images/Android-Small.jpg)` },
 
                 backgroundRepeat: 'no-repeat', backgroundSize: 'cover',
                 backgroundBlendMode: 'multiply',
