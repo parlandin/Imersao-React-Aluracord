@@ -100,7 +100,7 @@ export default function ChatPage({baseUrl, anonKey}  ) {
     const [mensage, setNewMensage] = useState("")
 
     
-    superbase
+    /* superbase
         .from("mensagens-date")
         .on('DELETE', async handleRecordInserted => {
             console.log("apagou")
@@ -110,7 +110,7 @@ export default function ChatPage({baseUrl, anonKey}  ) {
                 .order("id", { ascending:false})
                 .then( ( { data } ) =>  setUserMensagem(data)) 
         })
-        .subscribe()  
+        .subscribe()   */
 
 
 
