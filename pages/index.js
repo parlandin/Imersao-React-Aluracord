@@ -95,10 +95,10 @@ export default function PaginaInicial() {
                             onChange={event => {
                                 const newName = event.target.value
                                 let tamanho = newName.length
-                                if (tamanho > 2) {
+                                if (tamanho > 0) {
                                     setUserName(newName)
                                 } else {
-                                    setUserName()
+                                    setUserName("")
                                 }
 
                             }
@@ -179,7 +179,9 @@ export default function PaginaInicial() {
                                 borderRadius: '50%',
                                 marginBottom: '16px',
                             }}
-                            src={ `https://github.com/${userName}.png`}
+                            src={ userName.length > 2 
+                                ? (`https://github.com/${userName}.png`) 
+                                : (`https://github.com/gu-parlandim.png`)}
                                     
                             
                         />

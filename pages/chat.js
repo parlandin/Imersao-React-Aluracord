@@ -17,11 +17,12 @@ export async function getServerSideProps(context) {
     return {
       props: {
             baseUrl: process.env.SUPERBASE_URL,
-            anonKey: process.env.SUPERBASE_ANON_KEY
-
-        }, // will be passed to the page component as props
+            anonKey: process.env.SUPERBASE_ANON_KEY,
+        }, 
     }
   }
+
+
 
 
 
@@ -59,9 +60,9 @@ function listenerChange(addNewMensage, superbase){
 
 
 
-export default function ChatPage({baseUrl, anonKey}) {
-
-    const superbase = createClient(baseUrl, anonKey )
+export default function ChatPage({baseUrl, anonKey}  ) {
+    
+    const superbase = createClient(baseUrl, anonKey ) 
 
     // Sua lógica vai aqui
     const { userName } = useContext(UserContext)
@@ -96,7 +97,7 @@ export default function ChatPage({baseUrl, anonKey}) {
  */
 
     const [userMensangem, setUserMensagem] = useState([])
-    const [mensage, setNewMensage] = useState()
+    const [mensage, setNewMensage] = useState("")
 
     
     superbase
@@ -245,14 +246,20 @@ export default function ChatPage({baseUrl, anonKey}) {
 
                                 onKeyPress={(event) => {
                                     if (event.key === "Enter"){
+                                        if (mensage.length > 0){
                                         event.preventDefault()
                                         handleNewMessage(mensage)
+                                        }
+                                        else {
+                                            event.preventDefault()
+                                            alert("sua mensagem não pode ser vazia")
+                                        }
                                     }
                                 }}
                             />
                             <CustomButton onClick={() => {
-                                console.log("travou aqui")
-                                handleNewMessage(mensage)
+                                mensage.length > 0 ? handleNewMessage(mensage) : alert("sua mensagem não pode ser vazia")
+                                
                             }}>
                                 {SendImage.src}
                             </CustomButton>
