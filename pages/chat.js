@@ -36,7 +36,6 @@ function listenerDelete(paramets){
         superbase
         .from("mensagens-date")
         .on("DELETE", async (date) =>{
-            console.log("deletou")
             paramets(date)
         })
         .subscribe()
@@ -228,12 +227,6 @@ function Header({router}) {
 
 function MessageList(props) {
 
-    function Remover(mensagem) {
-        const novaListaDeMensagens = props.mensagens.filter((mensagemRemover) =>{
-            return  props.mensagens.id !== mensagemRemover.id
-        })
-        props.setMensagens(novaListaDeMensagens)
-    }
 
     
 
@@ -305,8 +298,7 @@ function MessageList(props) {
 
                             <CustomButton  onClick={() => {
                                         if(props.userName == date.userName && props.userName != "Gu-Parlandim"){
-                                            Remover(props.mensagens)
-
+                                        
                                             superbase
                                             .from("mensagens-date")
                                             .delete([date])
@@ -318,9 +310,7 @@ function MessageList(props) {
                                                 props.setDeleting((valor)=> {
                                                     return !valor
                                                 })
-                                                    
-                                                    
-                                            })  
+                                            })   
 
                                         } else{
                                             alert("Você só pode apagar suas proprias mensagens!!")
