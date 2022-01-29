@@ -13,16 +13,20 @@ import { ButtonSendSticker } from "../src/components/ButtonSendSticker"
 
 
 
-export async function getServerSideProps(context) {
+/* export async function getServerSideProps(context) {
     return {
       props: {
             baseUrl: process.env.SUPERBASE_URL,
             anonKey: process.env.SUPERBASE_ANON_KEY,
         }, 
     }
-  }
+  } */
 
 
+
+const baseUrl = process.env.NEXT_PUBLIC_SUPERBASE_URL
+const anonKey = process.env.NEXT_PUBLIC_SUPERBASE_ANON_KEY
+const superbase = createClient(baseUrl, anonKey ) 
 
 
 
@@ -60,9 +64,9 @@ function listenerChange(addNewMensage, superbase){
 
 
 
-export default function ChatPage({baseUrl, anonKey}  ) {
+export default function ChatPage(/* {baseUrl, anonKey} */ ) {
     
-    const superbase = createClient(baseUrl, anonKey ) 
+   /*  const superbase = createClient(baseUrl, anonKey )  */
 
     // Sua lógica vai aqui
     const { userName } = useContext(UserContext)
