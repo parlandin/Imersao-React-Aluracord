@@ -22,7 +22,7 @@ function listenerChange(addNewMensage){
         superbase
         .from("mensagens-date")
         .on('INSERT', async (date) => {
-            
+            console.log(date.new)
             addNewMensage(date.new) 
         })
         .subscribe()
@@ -62,6 +62,8 @@ export default function ChatPage() {
 
 
     useEffect(() => {
+        console.log("lista de mensagens:", userMensangem)
+        console.log("placeholde:", mensage)
         superbase
             .from("mensagens-date")
             .select("*")
@@ -110,7 +112,9 @@ export default function ChatPage() {
                     backgroundColor: "transparent",
                     backgroundImage: defaultTheme.backgroundImage,
                     backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
-                    color: defaultTheme.colors.neutrals['000']
+                    color: defaultTheme.colors.neutrals['000'],
+                    overflowX: 'hidden',
+                    wordWrap: "break-all"
                 }}
             >
                 <Box
@@ -125,6 +129,7 @@ export default function ChatPage() {
                         maxWidth: '90%',
                         maxHeight: '95vh',
                         padding: '32px',
+                        wordWrap: "break-all",
                     }}
                 >
                     <Header router={router} />
@@ -134,6 +139,8 @@ export default function ChatPage() {
                             display: 'flex',
                             flex: 1,
                             height: '80%',
+                            overflowX: 'hidden',
+                            wordWrap: "break-word",
                             backgroundColor: defaultTheme.colors.neutrals[600],
                             flexDirection: 'column',
                             borderRadius: '5px',
@@ -206,7 +213,8 @@ function Header({router}) {
 
     return (
         <>
-            <Box styleSheet={{ width: '100%', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
+            <Box styleSheet={{ width: '100%', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', overflow: 'hidden',
+                wordWrap: "break-word" }} >
                 <Text variant='heading5'>
                     Chat
                 </Text>
@@ -236,12 +244,15 @@ function MessageList(props) {
             styleSheet={{
                 overflow: 'scroll',
                 overflowX: 'hidden',
+                wordWrap: "break-all" ,
                 display: 'flex',
                 flexDirection: 'column-reverse',
                 flex: 1,
                 color: props.defaultTheme.colors.neutrals["000"],
                 marginBottom: '16px',
                 backgroundColor: props.defaultTheme.colors.neutrals[700],
+                overflowWrap: "break-word"
+
             }}
            
         >
@@ -249,7 +260,6 @@ function MessageList(props) {
             {props.mensagens.map((date) => {
                
                 return (
-                    <>
                     
                     <Text
                         key={date.id}
@@ -257,7 +267,10 @@ function MessageList(props) {
                         styleSheet={{
                             borderRadius: '5px',
                             padding: '6px',
-                            marginBottom: '12px',
+                            marginBottom: '5px',
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: `${date.userName == props.userName ? "flex-end" : "flex-begin"}`,
                             hover: {
                                 backgroundColor: props.defaultTheme.colors.neutrals[700],
                             }
@@ -268,16 +281,19 @@ function MessageList(props) {
                         <Box
                             styleSheet={{
                                 marginBottom: '8px',
+                                display: "flex",
+                                flexDirection:`${date.userName == props.userName ? "row-reverse": "row"}`,
+                                alignItems: "center",
                             }}
                         >
 
                             <Image
                                 styleSheet={{
-                                    width: '20px',
-                                    height: '20px',
+                                    width: '25px',
+                                    height: '25px',
                                     borderRadius: '50%',
                                     display: 'inline-block',
-                                    marginRight: '8px',
+                                    margin:  ' 0 8px',
                                 }}
                                 src={`https://github.com/${date.userName}.png`}
                             />
@@ -287,8 +303,7 @@ function MessageList(props) {
                             <Text
                                 styleSheet={{
                                     fontSize: '10px',
-                                    marginLeft: '8px',
-                                    marginRight: "20px",
+                                    margin: "0 10px",
                                     color: props.defaultTheme.colors.neutrals[300],
                                 }}
                                 tag="span"
@@ -331,15 +346,21 @@ function MessageList(props) {
                             src={date.texto.replace(":sticker:", "")} alt="sticker img" />
                         )
                         : 
-                        (
-                           date.texto
-                        )
+                        (<>
+                           <p>{date.texto}</p>
+                           <style jsx>{/*CSS*/`
+                            p {
+                                word-break: break-all; 
+                            }
+    
+                           `} </style>
+                        </>)
                     }
                        
                         
                     
                     </Text>
-                </>
+              
                 )
             })}
            
