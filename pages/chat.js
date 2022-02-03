@@ -22,7 +22,7 @@ function listenerChange(addNewMensage){
         superbase
         .from("mensagens-date")
         .on('INSERT', async (date) => {
-            console.log(date.new)
+           
             addNewMensage(date.new) 
         })
         .subscribe()
