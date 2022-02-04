@@ -63,8 +63,7 @@ export default function ChatPage() {
 
 
     useEffect(() => {
-        console.log("lista de mensagens:", userMensangem)
-        console.log("placeholde:", mensage)
+       
         superbase
             .from("mensagens-date")
             .select("*")
@@ -92,6 +91,7 @@ export default function ChatPage() {
         const newMensage = {
             userName: `${userName}`,
             texto: date,
+            created_at: new Date(),
         }
         superbase
             .from("mensagens-date")
@@ -115,7 +115,6 @@ export default function ChatPage() {
                     backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
                     color: defaultTheme.colors.neutrals['000'],
                     overflowX: 'hidden',
-                    wordWrap: "break-all"
                 }}
             >
                 <Box
@@ -125,15 +124,16 @@ export default function ChatPage() {
                         flex: 1,
                         boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
                         borderRadius: '5px',
-                        backgroundColor: defaultTheme.colors.neutrals[700],
+                        backgroundColor:  {xs: "transparent", sm: defaultTheme.colors.neutrals[700] },
                         height: '100%',
-                        maxWidth: '90%',
+                        maxWidth: {xs: "100%" , sm: "80%"},
                         maxHeight: '95vh',
-                        padding: '32px',
-                        wordWrap: "break-all",
+                        padding: {xs: "0px%" , sm: "10px%"},
+                        
                     }}
                 >
-                    <Header router={router} />
+
+                    <Header router={router}   defaultTheme={defaultTheme}/>
                     <Box
                         styleSheet={{
                             position: 'relative',
@@ -142,10 +142,10 @@ export default function ChatPage() {
                             height: '80%',
                             overflowX: 'hidden',
                             wordWrap: "break-word",
-                            backgroundColor: defaultTheme.colors.neutrals[600],
+                            backgroundColor:defaultTheme.colors.neutrals[600],
                             flexDirection: 'column',
-                            borderRadius: '5px',
-                            padding: '16px',
+                            borderRadius: {xs: "0px 0px 5x 5px" , sm: "5px"},
+                            padding:  {xs: "25px" , sm: "16px"},
                         }}
                     >
 
@@ -209,12 +209,19 @@ export default function ChatPage() {
     )
 }
 
-function Header({router}) {
+function Header({router,  defaultTheme }) {
     const setUserName = useContext(UserContext).setUserName
 
     return (
         <>
-            <Box styleSheet={{ width: '100%', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', overflow: 'hidden',
+            <Box styleSheet={{ width: '100%', 
+                /* marginBottom: '16px', */ 
+                marginBottom: {xs: "0px" , sm: "16px"},
+                display: 'flex', alignItems: 'center', 
+                justifyContent: 'space-between', 
+                overflow: 'hidden',
+                backgroundColor: {xs: defaultTheme.colors.neutrals[600], sm: "transparent"},
+                padding: "10px",
                 wordWrap: "break-word" }} >
                 <Text variant='heading5'>
                     Chat
@@ -245,7 +252,6 @@ function MessageListTest(props) {
             styleSheet={{
                 overflow: 'scroll',
                 overflowX: 'hidden',
-                wordWrap: "break-all" ,
                 display: 'flex',
                 flexDirection: 'column-reverse',
                 flex: 1,
@@ -309,7 +315,7 @@ function MessageListTest(props) {
                                 }}
                                 tag="span"
                             >
-                                {(new Date().toLocaleDateString())}
+                                {new Date(date.created_at).toLocaleString('pt-BR').substring(0,16)}
                             </Text>
 
                             <CustomButton  onClick={() => {
@@ -351,7 +357,10 @@ function MessageListTest(props) {
                            <p>{date.texto}</p>
                            <style jsx>{/*CSS*/`
                             p {
-                                word-break: break-all; 
+                                word-break: break-all;
+                                word-break: break-word;
+                                margin: 5px;
+                                max-width: 65%;
                             }
     
                            `} </style>
