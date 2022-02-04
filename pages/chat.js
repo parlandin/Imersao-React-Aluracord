@@ -7,6 +7,7 @@ import { ThemeContext } from '../contexts/ThemeContext'
 import { createClient } from '@supabase/supabase-js'
 import CustomButton from '../src/components/CustomButton';
 import { ButtonSendSticker } from "../src/components/ButtonSendSticker"
+import { memo } from 'react/cjs/react.production.min';
 
 
 
@@ -233,7 +234,7 @@ function Header({router}) {
     )
 }
 
-function MessageList(props) {
+function MessageListTest(props) {
 
 
     
@@ -369,3 +370,5 @@ function MessageList(props) {
     )
    
 }
+
+const MessageList = memo(MessageListTest)
