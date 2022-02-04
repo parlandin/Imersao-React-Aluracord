@@ -277,7 +277,7 @@ function MessageListTest(props) {
                             marginBottom: '5px',
                             display: "flex",
                             flexDirection: "column",
-                            alignItems: `${date.userName == props.userName ? "flex-end" : "flex-begin"}`,
+                            alignItems: `${date.userName.toString().toLocaleLowerCase() == props.userName.toString().toLocaleLowerCase() ? "flex-end" : "flex-begin"}`,
                             hover: {
                                 backgroundColor: props.defaultTheme.colors.neutrals[700],
                             }
@@ -289,7 +289,7 @@ function MessageListTest(props) {
                             styleSheet={{
                                 marginBottom: '8px',
                                 display: "flex",
-                                flexDirection:`${date.userName == props.userName ? "row-reverse": "row"}`,
+                                flexDirection:`${date.userName.toString().toLocaleLowerCase() == props.userName.toString().toLocaleLowerCase() ? "row-reverse": "row"}`,
                                 alignItems: "center",
                             }}
                         >
