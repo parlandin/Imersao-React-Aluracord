@@ -53,7 +53,7 @@ export default function ChatPage() {
 
     const { defaultTheme } = useContext(ThemeContext)
 
-
+    const {active, setActive} = useState(false)
 
     const [userMensangem, setUserMensagem] = useState([])
     const [mensage, setNewMensage] = useState("")
@@ -65,7 +65,7 @@ export default function ChatPage() {
     useEffect(() => {
        
         superbase
-            .from("mensagens-date")
+            .from("mensagens-date_duplicate")
             .select("*")
             .order("id", { ascending:false})
             .then( ( { data } ) => {
@@ -178,26 +178,27 @@ export default function ChatPage() {
 
                                 onKeyPress={(event) => {
                                     if (event.key === "Enter"){
-                                        if (mensage.length > 0){
+                                        event.preventDefault()
+                                        /* if (mensage.length > 0){
                                         event.preventDefault()
                                         handleNewMessage(mensage)
                                         }
                                         else {
                                             event.preventDefault()
                                             alert("sua mensagem não pode ser vazia")
-                                        }
-                                    }
+                                        } */
+                                    } 
                                 }}
                             />
-                            <CustomButton onClick={() => {
+                            {active && <CustomButton onClick={() => {
                                 mensage.length > 0 ? handleNewMessage(mensage) : alert("sua mensagem não pode ser vazia")
                                 
                             }}>
                                 {"/images/send.svg"}
-                            </CustomButton>
-                            <ButtonSendSticker onSend={(sticker)=> {
+                            </CustomButton>}
+                            <ButtonSendSticker onSend={(sticker) => {
                                 
-                                handleNewMessage(`:sticker:${sticker}`)
+                                /* handleNewMessage(`:sticker:${sticker}`) */
                             }}>
 
                             </ButtonSendSticker>
@@ -319,7 +320,7 @@ function MessageListTest(props) {
                             </Text>
 
                             <CustomButton  onClick={() => {
-                                        if(props.userName == date.userName && props.userName != "Gu-Parlandim"){
+                                        /* if(props.userName == date.userName && props.userName != "Gu-Parlandim"){
                                         
                                             superbase
                                             .from("mensagens-date")
@@ -328,7 +329,7 @@ function MessageListTest(props) {
                                             .then(() => {})
 
                                             listenerDelete((date) => {
-                                                console.log("deletou:", date)
+                                                
                                                 props.setDeleting((valor)=> {
                                                     return !valor
                                                 })
@@ -336,7 +337,7 @@ function MessageListTest(props) {
 
                                         } else{
                                             alert("Você só pode apagar suas proprias mensagens!!")
-                                        }
+                                        } */
                                     }
                                 }>
                                 {"/images/trash2.svg"}
