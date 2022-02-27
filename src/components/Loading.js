@@ -14,10 +14,7 @@ function Loading(){
                 .progress.arc::before {
                     animation-name: arc;
                 }
-                @font-face {
-                    font-family: "Retro gaming";
-                    src: url("/fonts/Retro-Gaming.ttf");
-                }
+                
                 p{
                     font-size: 2em;
                     font-family: "Retro gaming", sans-serif;

@@ -11,6 +11,9 @@ function FormInput({type, handleOnSubmit, handleChangeLogin}){
 
     function handleSubmit(e){
         e.preventDefault()
+        if(values.email < 0|| values.senha < 6){
+            return alert("dados inválido , revise e tente novamente")
+        }
         handleOnSubmit(values)
     }
     return (
@@ -33,7 +36,7 @@ function FormInput({type, handleOnSubmit, handleChangeLogin}){
                 />
 
                 <span className="pass_info">
-                    {type == "Registrar" ?  "minimo 6 caracteres" : "Clique aqui para recuperar senha"}
+                    minimo 6 caracteres
                 </span>
             </div>
 
@@ -41,7 +44,7 @@ function FormInput({type, handleOnSubmit, handleChangeLogin}){
         </form>
 
         <input type="button"  className="button_login" onClick={handleChangeLogin}
-        value={type == "Registrar" ? "já tem uma conta? entra" : "não tem uma conta? registre"}/> 
+        value={type == "Registrar" ? "Já tem uma Conta? Acesse aqui" : "não tem uma Conta? Criar nova"}/> 
 
         <style jsx>{/*css*/`
             form{
@@ -75,10 +78,11 @@ function FormInput({type, handleOnSubmit, handleChangeLogin}){
                 border: 1px solid #000;
                 background: transparent;
                 color: #ffffff;
-                font-size: 1.5em;
+                font-size: 1.2em;
                 cursor: pointer;
                 box-shadow: 3px 4px 0px 0px #fff;
-                margin-bottom: 20px
+                margin-bottom: 20px;
+                font-family: "Retro gaming", sans-serif;
             }
 
             input.button_login {
@@ -86,6 +90,7 @@ function FormInput({type, handleOnSubmit, handleChangeLogin}){
                 border: none;
                 color: #fff;
                 cursor: pointer;
+                font-family: "Retro gaming", sans-serif;
             }
             .pass_info {
                 font-size: 0.7em;

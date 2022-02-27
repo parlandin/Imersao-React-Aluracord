@@ -1,4 +1,4 @@
-import GlobalStyle from '../src/components/GlobalStyle';
+import GlobalStyle from '../src/Styles/GlobalStyle';
 import HeadPage from '../src/components/HeadPages';
 import { AuthContextProvider } from '../hooks/UserContext';
 

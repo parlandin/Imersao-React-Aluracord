@@ -5,71 +5,94 @@ import supabase from "../../../services/supabase"
 import { useAuth } from "../../../hooks/UserContext"
 import { useRouter } from "next/router"
 import Loading from "../Loading"
+import MessagePopup from "../MessagePopup"
+
 
 
 function Form(){
-    const [loggin, setLoggin] = useState(false)
+    const [stateLogin, setStateLogin] = useState({
+        loading: false,
+        PopupMessage: false,
+        message: "",
+        type: "success"
+    })
+
     const router = useRouter()
     const [user, setUser] = useAuth()
-    const [loading, setLoadin] = useState(false)
+    
 
     async function handleLogin(date){
-        setLoadin(true)
+        setStateLogin({...stateLogin, loading: true})
         let { user, error } = await supabase.auth.signIn({
             email: date.email,
-            password: date.senha
+            password: date.senha,
           })
+          
         if (error){
             console.log(error)
-            return
+            setStateLogin({...stateLogin, loading: false})
+            setStateLogin({...stateLogin, PopupMessage: true, message: error.message, type: "error"})
+
+            const inteval = setTimeout(() => setStateLogin({...stateLogin, PopupMessage: false}), 1500)
+            return () => clearInterval(inteval)
         }
         setUser(user)
         router.push("/chat")
     }
 
     async function handleRegistre(date){
-        setLoadin(true)
+        setStateLogin({...stateLogin, loading: true})
         let { user, error } = await supabase.auth.signUp({
             email: date.email,
             password: date.senha
           })
+
         if (error){
-            console.log(error)
-            return
+            setStateLogin({...stateLogin, loading: false})
+            setStateLogin({...stateLogin, PopupMessage: true, message: error.message, type: "error"})
+            
+            const inteval = setTimeout(() => setStateLogin({...stateLogin, PopupMessage: false}), 1500)
+            return () => clearInterval(inteval)
         }
-        setUser(user)
+
+
+        setStateLogin({...stateLogin, loading: false, PopupMessage: true, message: "  Confirme seu email para continuar  ", type: "success"})
+
+        const inteval = setTimeout(() => setStateLogin({...stateLogin, PopupMessage: false}), 1500)
+        return () => clearInterval(inteval)
     }
+
 
     function handleChangeLogin(){
-        setLoggin(!loggin)
+        setStateLogin(!stateLogin)
 
     }
-    return (
-    <>  {loading ? <Loading /> :
-            user  || loggin
-            ?   <div>
-                <FormHeader />
-                <FormInput 
-                type="Entrar"
-                handleOnSubmit={handleLogin}
-                handleChangeLogin={handleChangeLogin}/>
-                </div>
 
-            : <div>
-                <FormHeader />
-                <FormInput 
-                type="Registrar"
-                handleOnSubmit={handleRegistre}
-                handleChangeLogin={handleChangeLogin}/>
-                </div>
-            
+
+    return (
+    <>  
+        {stateLogin.PopupMessage ? <MessagePopup type={stateLogin.type} message={stateLogin.message}/> :
+            stateLogin.loading ? <Loading /> :
+                    user  || stateLogin
+                    ?   <div>
+                        <FormHeader />
+                        <FormInput 
+                        type="Entrar"
+                        handleOnSubmit={handleLogin}
+                        handleChangeLogin={handleChangeLogin}/>
+                        </div>
+
+                    : <div>
+                        <FormHeader />
+                        <FormInput 
+                        type="Registrar"
+                        handleOnSubmit={handleRegistre}
+                        handleChangeLogin={handleChangeLogin}/>
+                        </div>
+                
         }
-        
+
         <style jsx>{/*css*/`
-            @font-face {
-                font-family: "Retro gaming";
-                src: url("/fonts/Retro-Gaming.ttf");
-            }
             *{
                 font-family: "Retro gaming", sans-serif;
             }
