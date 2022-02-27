@@ -14,6 +14,7 @@ function FormHeader(){
             span{
                 font-size: .8em;
                 color: #ffffff;
+                padding: 5px;
             }
             div {
                 display: flex;

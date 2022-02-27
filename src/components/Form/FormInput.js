@@ -29,10 +29,14 @@ function FormInput({type, handleOnSubmit, handleChangeLogin}){
                 <input type="password"
                 onChange={handleChange} 
                 value={values.senha}  
-                name="senha"/>
+                name="senha"
+                />
 
-                <span className="pass_info">minimo 6 caracteres</span>
+                <span className="pass_info">
+                    {type == "Registrar" ?  "minimo 6 caracteres" : "Clique aqui para recuperar senha"}
+                </span>
             </div>
+
             <button type="submit">{type}</button>
         </form>
 
@@ -47,7 +51,7 @@ function FormInput({type, handleOnSubmit, handleChangeLogin}){
                 align-items: center;
             }
             form label {
-                margin-bottom: 5px;
+                margin-bottom: 10px;
             }
 
             form div {
@@ -55,12 +59,13 @@ function FormInput({type, handleOnSubmit, handleChangeLogin}){
                 flex-direction: column;
                 align-items: flex-start;
                 color: #ffffff;
-                margin-bottom: 10px;
+                margin-bottom: 25px;
             }
             form div input {
                 background-color: transparent;
                 outline: none;
-                border: 1px solid #000;
+                border: 2px solid #000;
+                box-shadow: 3px 4px 0px 0px #fff;
                 font-size: 1.4em;
                 height: 30px;
             }
@@ -72,6 +77,8 @@ function FormInput({type, handleOnSubmit, handleChangeLogin}){
                 color: #ffffff;
                 font-size: 1.5em;
                 cursor: pointer;
+                box-shadow: 3px 4px 0px 0px #fff;
+                margin-bottom: 20px
             }
 
             input.button_login {
@@ -82,7 +89,7 @@ function FormInput({type, handleOnSubmit, handleChangeLogin}){
             }
             .pass_info {
                 font-size: 0.7em;
-                margin-top:5px ;
+                margin-top:10px ;
             }
         `}
         </style>
