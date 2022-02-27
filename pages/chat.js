@@ -1,29 +1,23 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
-import React, { useContext, useState, useEffect } from 'react';
+import React, {  useState, useEffect , memo} from 'react';
 import Head from "next/head"
-import { UserContext } from '../contexts/UserContext'
 import { useRouter } from 'next/router';
-import { ThemeContext } from '../contexts/ThemeContext'
-import { createClient } from '@supabase/supabase-js'
 import CustomButton from '../src/components/CustomButton';
 import { ButtonSendSticker } from "../src/components/ButtonSendSticker"
-import { memo } from 'react/cjs/react.production.min';
+import appConfig from '../config.json'
+import supabase from "../services/supabase"
+import { useAuth } from '../hooks/UserContext';
 
 
-
-
-const baseUrl = process.env.NEXT_PUBLIC_SUPERBASE_URL
-const anonKey = process.env.NEXT_PUBLIC_SUPERBASE_ANON_KEY
-const superbase = createClient(baseUrl, anonKey ) 
 
 
 
 function listenerChange(addNewMensage){
     return (
-        superbase
+        supabase
         .from("mensagens-date")
         .on('INSERT', async (date) => {
-           
+            console.log(date)
             addNewMensage(date.new) 
         })
         .subscribe()
@@ -34,7 +28,7 @@ function listenerChange(addNewMensage){
 
 function listenerDelete(paramets){
     return (
-        superbase
+        supabase
         .from("mensagens-date")
         .on("DELETE", async (date) =>{
             paramets(date)
@@ -44,14 +38,11 @@ function listenerDelete(paramets){
 }
 
 
-
-
 export default function ChatPage() {
-    
-    const { userName } = useContext(UserContext)
-    const router = useRouter()
 
-    const { defaultTheme } = useContext(ThemeContext)
+    const [user, setUser] = useAuth()
+    const router = useRouter()
+    const defaultTheme = appConfig.defaultTheme
 
     const {active, setActive} = useState(false)
 
@@ -63,13 +54,16 @@ export default function ChatPage() {
 
 
     useEffect(() => {
+        if(!user){
+            router.push("/")
+            return
+        }
        
-        superbase
-            .from("mensagens-date_duplicate")
+        supabase
+            .from("mensagens-date")
             .select("*")
             .order("id", { ascending:false})
             .then( ( { data } ) => {
-                
                 setUserMensagem(data)
             })
 
@@ -83,20 +77,21 @@ export default function ChatPage() {
         })
 
 
-    }, [deleting])
+    }, [])
     
     
 
     function handleNewMessage(date){
         const newMensage = {
-            userName: `${userName}`,
+            userName: `anonymos`,
             texto: date,
             created_at: new Date(),
+            user_id: user.identities[0].user_id 
         }
-        superbase
+        supabase
             .from("mensagens-date")
             .insert([newMensage])
-            .then(() =>  {})
+            .then((date) =>  {console.log(date)})
             
         setNewMensage("") 
     }
@@ -133,7 +128,7 @@ export default function ChatPage() {
                     }}
                 >
 
-                    <Header router={router}   defaultTheme={defaultTheme}/>
+                    <Header router={router}   defaultTheme={defaultTheme} supabase={supabase}/>
                     <Box
                         styleSheet={{
                             position: 'relative',
@@ -149,7 +144,7 @@ export default function ChatPage() {
                         }}
                     >
 
-                        {<MessageList defaultTheme={defaultTheme} mensagens={userMensangem} userName={userName} setMensagens={setUserMensagem} superbase={superbase} setDeleting={setDeleting}/>}
+                        {<MessageList defaultTheme={defaultTheme} mensagens={userMensangem} setMensagens={setUserMensagem} supabase={supabase} setDeleting={setDeleting}/>}
                         
                         <Box
                             as="form"
@@ -178,15 +173,15 @@ export default function ChatPage() {
 
                                 onKeyPress={(event) => {
                                     if (event.key === "Enter"){
-                                        event.preventDefault()
-                                        /* if (mensage.length > 0){
-                                        event.preventDefault()
-                                        handleNewMessage(mensage)
+                                        /* event.preventDefault() */
+                                        if (mensage.length > 0){
+                                            event.preventDefault()
+                                            handleNewMessage(mensage)
                                         }
                                         else {
                                             event.preventDefault()
                                             alert("sua mensagem não pode ser vazia")
-                                        } */
+                                        } 
                                     } 
                                 }}
                             />
@@ -210,8 +205,7 @@ export default function ChatPage() {
     )
 }
 
-function Header({router,  defaultTheme }) {
-    const setUserName = useContext(UserContext).setUserName
+function Header({router,  defaultTheme , supabase }) {
 
     return (
         <>
@@ -231,10 +225,10 @@ function Header({router,  defaultTheme }) {
                     variant='tertiary'
                     colorVariant='neutral'
                     label='Logout'
-                    onClick={(event => {
+                    onClick={(async event => {
                         event.preventDefault()
-                        setUserName("")
-                        router.push("/")
+                        let { error } = await supabase.auth.signOut()
+                        router.reload()
                     })}
                 />
             </Box>
@@ -278,7 +272,7 @@ function MessageListTest(props) {
                             marginBottom: '5px',
                             display: "flex",
                             flexDirection: "column",
-                            alignItems: `${date.userName.toString().toLocaleLowerCase() == props.userName.toString().toLocaleLowerCase() ? "flex-end" : "flex-begin"}`,
+                            alignItems: `${date.userName.toString().toLocaleLowerCase() ? "flex-end" : "flex-begin"}`,
                             hover: {
                                 backgroundColor: props.defaultTheme.colors.neutrals[700],
                             }
@@ -290,7 +284,7 @@ function MessageListTest(props) {
                             styleSheet={{
                                 marginBottom: '8px',
                                 display: "flex",
-                                flexDirection:`${date.userName.toString().toLocaleLowerCase() == props.userName.toString().toLocaleLowerCase() ? "row-reverse": "row"}`,
+                                flexDirection:`${date.userName.toString().toLocaleLowerCase()  ? "row-reverse": "row"}`,
                                 alignItems: "center",
                             }}
                         >
@@ -322,7 +316,7 @@ function MessageListTest(props) {
                             <CustomButton  onClick={() => {
                                         /* if(props.userName == date.userName && props.userName != "Gu-Parlandim"){
                                         
-                                            superbase
+                                            supabase
                                             .from("mensagens-date")
                                             .delete([date])
                                             .match({ id: `${date.id}` })
