@@ -1,6 +1,5 @@
 
-
-function CustomButton( { children , onClick} ) {
+function CustomButtonOne( { children , onClick} ) {
     return (
     <>
        <button type="button" onClick={onClick}>
@@ -23,4 +22,4 @@ function CustomButton( { children , onClick} ) {
     )
 }
 
-export default CustomButton
+export default CustomButtonOne

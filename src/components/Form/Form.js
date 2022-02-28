@@ -29,7 +29,6 @@ function Form(){
           })
           
         if (error){
-            console.log(error)
             setStateLogin({...stateLogin, loading: false})
             setStateLogin({...stateLogin, PopupMessage: true, message: error.message, type: "error"})
 
