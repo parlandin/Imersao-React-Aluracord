@@ -1,4 +1,4 @@
-import { Box, Button, Text, TextField, Image } from '@skynexui/components'
+import { Box } from '@skynexui/components'
 import appConfig from '../config.json'
 import React, { useContext, useState, useEffect } from 'react'
 import Head from "next/head"

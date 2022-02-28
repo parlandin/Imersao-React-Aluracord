@@ -20,8 +20,7 @@ export default function ChatPage() {
     const [user, setUser] = useAuth()
     const [session, setSession] = useState(supabase.auth.session())
     const [userInfo, setUserInfo] = useState({
-        username: "new_user",
-        avatar_url: "Unknown_person.jpg"
+        username: "new_user"
 
     })
 
@@ -103,7 +102,6 @@ export default function ChatPage() {
             if(data) {
                 setUserInfo(data)
                 setLoading(false)
-                return
             }
             if(user){
                 return setLoading(false)
@@ -118,7 +116,7 @@ export default function ChatPage() {
     
     function handleNewMessage(date){
         const newMensage = {
-            avatar: userInfo.avatar_url,
+            avatar: userInfo.avatar_url ? "userInfo.avatar_url" : "Unknown_person.jpg",
             userName: userInfo.username,
             texto: date,
             created_at: new Date(),
