@@ -9,7 +9,7 @@ function GlobalStyle() {
       }
       @font-face {
         font-family: "Retro gaming";
-        src: url("/fonts/Retro-Gaming.ttf");
+        src: url("https://yydjgkxeuorrnksdcojq.supabase.in/storage/v1/object/public/public/Retro-Gaming.ttf");
         }
         
       body {
