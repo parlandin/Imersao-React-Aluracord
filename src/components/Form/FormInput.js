@@ -73,6 +73,12 @@ function FormInput({type, handleOnSubmit, handleChangeLogin}){
                 height: 30px;
             }
 
+            form div input:focus {
+                background-image: none;
+                background-color: rgb(232, 240, 254);
+                
+            }
+
             form button {
                 padding: 5px 20px;
                 border: 1px solid #000;
