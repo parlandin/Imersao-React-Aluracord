@@ -2,14 +2,14 @@ import { Box,  TextField, } from '@skynexui/components';
 import React, {  useState, useEffect } from 'react';
 import Head from "next/head"
 import { useRouter } from 'next/router';
-import CustomButtonOne from '../src/Components/CustomButtonOne';
+import CustomButtonOne from '../src/components/CustomButtonOne';
 import { ButtonSendSticker } from "../src/components/ButtonSendSticker"
 import appConfig from '../config.json'
 import supabase from "../services/supabase"
 import { useAuth } from '../hooks/UserContext';
-import Account from '../src/Components/Account';
-import Loading from "../src/Components/Loading" 
-import MessageList from "../src/Components/MessageList"
+import Account from '../src/components/Account';
+import Loading from "../src/components/Loading" 
+import MessageList from "../src/components/MessageList"
 import Header from '../src/Components/HeaderComponet';
 
 

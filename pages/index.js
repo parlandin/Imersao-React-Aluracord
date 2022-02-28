@@ -2,7 +2,7 @@ import { Box } from '@skynexui/components'
 import appConfig from '../config.json'
 import React, { useContext, useState, useEffect } from 'react'
 import Head from "next/head"
-import Form from "../src/Components/Form/Form"
+import Form from "../src/components/Form/Form"
 import { useAuth } from '../hooks/UserContext'
 import { useRouter } from 'next/router';
 
