@@ -10,7 +10,7 @@ import { useAuth } from '../hooks/UserContext';
 import Account from '../src/components/Account';
 import Loading from "../src/components/Loading" 
 import MessageList from "../src/components/MessageList"
-import Header from '../src/Components/HeaderComponet';
+import Header from '../src/components/HeaderComponet';
 
 
 
