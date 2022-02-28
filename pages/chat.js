@@ -16,24 +16,14 @@ import Header from '../src/Components/HeaderComponet';
 
 
 
-function listenerChange(addNewMensage){
-    return (
-        supabase
-        .from("mensagens-date")
-        .on('INSERT', async (date) => {
-            addNewMensage(date.new) 
-        })
-        .subscribe()
-
-    )
-}
-
-
-
 export default function ChatPage() {
     const [user, setUser] = useAuth()
     const [session, setSession] = useState(supabase.auth.session())
-    const [userInfo, setUserInfo] = useState(null)
+    const [userInfo, setUserInfo] = useState({
+        username: "new_user",
+        avatar_url: "Unknown_person.jpg"
+
+    })
 
     const [userMensangem, setUserMensagem] = useState([])
     const [mensage, setNewMensage] = useState("")
@@ -44,20 +34,25 @@ export default function ChatPage() {
 
     const [loading, setLoading] = useState(true)
 
-   
 
-
-    useEffect(() => {
-        supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session)
-          })
-
-        if(session){
-            getProfile()  
-        }
-        
-    }, [user])
-
+    function listenerChange(addNewMensage){
+        return (
+            supabase
+            .from("mensagens-date")
+            .on('INSERT', async (date) => {
+                addNewMensage(date.new) 
+            })
+            .on("DELETE", async ( {old} ) => {
+                setUserMensagem((valorAtual) => {
+                    const newValue = [...valorAtual].filter((value) => value.id != old.id )
+                    return newValue
+                })
+              })
+            .subscribe()
+    
+        )
+    }
+    
 
     useEffect(() => {
         if(!user){
@@ -82,6 +77,20 @@ export default function ChatPage() {
             )
         })
     }, [])
+
+
+
+    useEffect(() => {
+        supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session)
+          })
+
+        if(session){
+            getProfile()  
+        }
+        
+    }, [user])
+
     
     async function getProfile() {
         try {
@@ -94,7 +103,12 @@ export default function ChatPage() {
             if(data) {
                 setUserInfo(data)
                 setLoading(false)
+                return
             }
+            if(user){
+                return setLoading(false)
+            }
+            
         }
         catch(error){
             console.log(error)
@@ -113,7 +127,7 @@ export default function ChatPage() {
         supabase
             .from("mensagens-date")
             .insert([newMensage])
-            .then((date) =>  {})
+            .then(() =>  {})
             
         setNewMensage("") 
     }
@@ -220,7 +234,7 @@ export default function ChatPage() {
                             </CustomButtonOne>
                             <ButtonSendSticker onSend={(sticker) => {
                                 
-                                /* handleNewMessage(`:sticker:${sticker}`) */
+                                handleNewMessage(`:sticker:${sticker}`) 
                             }}>
 
                             </ButtonSendSticker>

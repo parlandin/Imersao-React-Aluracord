@@ -5,7 +5,7 @@ import CustomButtonOne from "./CustomButtonOne";
 
 
 function MessageListTest( props) {
-
+    const user = props.user || "anywere"
     return (
     <>
         <Box 
@@ -38,7 +38,7 @@ function MessageListTest( props) {
                             marginBottom: '5px',
                             display: "flex",
                             flexDirection: "column",
-                            alignItems: `${date.userName.toString().toLocaleLowerCase() == props.user.toString().toLocaleLowerCase()
+                            alignItems: `${date.userName.toString().toLocaleLowerCase() == user.toString().toLocaleLowerCase()
                                 ? "flex-end" : "flex-begin"}`,
                             hover: {
                                 backgroundColor: props.defaultTheme.colors.neutrals[700],
@@ -51,7 +51,7 @@ function MessageListTest( props) {
                             styleSheet={{
                                 marginBottom: '8px',
                                 display: "flex",
-                                flexDirection:`${date.userName.toString().toLocaleLowerCase() == props.user.toString().toLocaleLowerCase()  
+                                flexDirection:`${date.userName.toString().toLocaleLowerCase() == user.toString().toLocaleLowerCase()  
                                     ? "row-reverse": "row"}`,
                                 alignItems: "center",
                             }}
@@ -82,24 +82,19 @@ function MessageListTest( props) {
                             </Text>
 
                             <CustomButtonOne  onClick={() => {
-                                        /* if(props.userName == date.userName && props.userName != "Gu-Parlandim"){
+                                        if(user == date.userName){
                                         
-                                            supabase
+                                            props.supabase
                                             .from("mensagens-date")
                                             .delete([date])
                                             .match({ id: `${date.id}` })
                                             .then(() => {})
 
-                                            listenerDelete((date) => {
-                                                
-                                                props.setDeleting((valor)=> {
-                                                    return !valor
-                                                })
-                                            })   
+                                            
 
                                         } else{
                                             alert("Você só pode apagar suas proprias mensagens!!")
-                                        } */
+                                        } 
                                     }
                                 }>
                                 {"/images/trash2.svg"}
