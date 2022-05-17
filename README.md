@@ -2,7 +2,7 @@
 
 
 
-<img src="https://github.com/Gu-Parlandim/Imersao-React-Aluracord/blob/main/src/images/segunda-vesao.png" alt="exemplo imagem">
+<img src="https://github.com/Gu-Parlandim/Imersao-React-Aluracord/blob/main/public/images/Screenshot%20(205).png" alt="exemplo imagem">
 
 > Projeto em desenvolvimento.
 
