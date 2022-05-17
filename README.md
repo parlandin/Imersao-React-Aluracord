@@ -11,9 +11,9 @@
 O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas:
 
 - [x] Criar primeira tela.
-- [ ] Criar segunda tela.
-- [ ] Autenticação github.
-- [ ] Buscar informações  no banco de dados.
+- [x] Criar segunda tela.
+- [x] Autenticação github.
+- [x] Buscar informações  no banco de dados.
 - [ ] Finalizar projeto.
 
 ## 💻 Pré-requisitos
